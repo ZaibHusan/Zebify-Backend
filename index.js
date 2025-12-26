@@ -14,7 +14,18 @@ const app = express();
 const PORT = 3000;
 
 
-app.use(cors());
+const commonCors = cors({
+  origin: function (origin, callback) {
+    // Allow all origins dynamically
+    // When credentials are included, we need to return the specific origin, not '*'
+    callback(null, origin || '*');
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+});
+
+app.use(commonCors);
 
 
 connectMongoose();
