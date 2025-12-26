@@ -14,14 +14,15 @@ const app = express();
 const PORT = 3000;
 
 
-app.use(cors())
+app.use(cors());
+
 
 connectMongoose();
 app.use(express.json())
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
-    res.send({ messege: "Server is runnings" });
+    res.send({ messege: "Server is runnings and every thing is good" });
 })
 
 
