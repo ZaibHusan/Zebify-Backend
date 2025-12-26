@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# Build folders
+dist/
+build/
+
+# Vite cache
+.vite/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+
+# Optional: uploaded files
+uploads/
+downloads/
+
+# System files
+*.log
+*.tmp
