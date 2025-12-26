@@ -22,7 +22,7 @@ app.use(express.json())
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
-    res.send({ messege: "Server is running" });
+    res.send({ messege: "Server is runnings" });
 })
 
 
