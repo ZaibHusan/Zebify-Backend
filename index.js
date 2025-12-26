@@ -14,19 +14,7 @@ const app = express();
 const PORT = 3000;
 
 
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) {
-            // allow requests with no origin (Postman, server-to-server)
-            return callback(null, true);
-        }
-
-        return callback(null, origin);
-    },
-    credentials: true
-}));
-
-
+app.use(cors())
 
 connectMongoose();
 app.use(express.json())
