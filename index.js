@@ -50,6 +50,6 @@ app.use("/api/user", userRoute);
 app.use("/api/card", cardMiddlewear, cardRouter)
 app.use("/api/order", orderRoute)
 
-// app.listen(PORT, () => {
-//     console.log(`Server is running on port ${PORT}`);
-// })
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+})
