@@ -26,6 +26,8 @@ app.use(cors({
     credentials: true
 }));
 
+
+
 connectMongoose();
 app.use(express.json())
 app.use(cookieParser());
