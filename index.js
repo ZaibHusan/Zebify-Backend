@@ -13,10 +13,28 @@ import orderRoute from './Routes/OrderRouter.js';
 const app = express();
 const PORT = 3000;
 
-app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174','https://zebify-admin.vercel.app/'], // your frontend URL
-    credentials: true // allow sending cookies
-}));
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://zebify-admin.vercel.app"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
+
+
 connectMongoose();
 app.use(express.json())
 app.use(cookieParser());
