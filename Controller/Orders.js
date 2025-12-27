@@ -7,11 +7,11 @@ import User from "../Models/User.js";
 
 const addOrder = async (req, res) => {
     if (!req.body) {
-        res.send({ success: false, messege: "please provide order details" })
+        return res.status(400).json({ success: false, messege: "Please provide order details" })
     }
     const formdata = req.body.formdata;
     if (!formdata) {
-        res.send({ success: false, messege: "please provide valid fromData" })
+        return res.status(400).json({ success: false, messege: "Please provide valid fromData" })
     }
     try {
         const {
@@ -25,7 +25,7 @@ const addOrder = async (req, res) => {
         } = formdata;
         const user = await User.findById(userId)
         if (!user) {
-            res.send({ success: false, messege: "User not found" })
+            return res.status(404).json({ success: false, messege: "User not found" })
         }
         product.map(async (item) => {
             const product = await Product.findById(item.productId);
@@ -50,11 +50,11 @@ const addOrder = async (req, res) => {
             }
         }
         )
-        res.send({ success: true, messege: "order successfully added" })
+        res.status(201).json({ success: true, messege: "Order successfully added" })
 
     } catch (error) {
         console.log(error)
-        res.send({ success: false, messege: "something going wrong" })
+        res.status(500).json({ success: false, messege: "Something went wrong", error: error.message })
     }
 }
 
@@ -66,15 +66,15 @@ const addOrder = async (req, res) => {
 const getOrder = async (req, res) => {
     const { userId } = req.body
     if (!userId) {
-        res.send({ success: false, messege: "please provide user id" })
+        return res.status(400).json({ success: false, messege: "Please provide user id" })
     }
     try {
         const orders = await Order.find();
         const filteredOrders = orders.filter((order) => order.user_id === userId);
-        res.send({ success: true, filteredOrders })
+        res.status(200).json({ success: true, filteredOrders })
     } catch (error) {
         console.log(error)
-        res.send({ success: false, messege: "something going wrong" })
+        res.status(500).json({ success: false, messege: "Something went wrong", error: error.message })
     }
 }
 
@@ -84,10 +84,13 @@ const getOrder = async (req, res) => {
 const getOrderadmin = async (req, res) => {
     try {
         const ordersadmin = await Order.find();
-        res.send({ success: true, ordersadmin })
+        if (!ordersadmin || ordersadmin.length === 0) {
+            return res.status(200).json({ success: true, ordersadmin: [], messege: "No orders found" });
+        }
+        res.status(200).json({ success: true, ordersadmin })
     } catch (error) {
-        console.log(error)
-        res.send({ success: false, messege: "something going wrong" })
+        console.log("Error in getOrderadmin:", error);
+        res.status(500).json({ success: false, messege: "Something went wrong", error: error.message })
     }
 }
 
@@ -95,17 +98,21 @@ const orderclear = async (req, res) => {
     try {
         const { id } = req.body;
         if (!id) {
-            res.send({ success: false, messege: "please provide order id" })
+            return res.status(400).json({ success: false, messege: "Please provide order id" })
         }
         const order = await Order.findById(id);
+        if (!order) {
+            return res.status(404).json({ success: false, messege: "Order not found" })
+        }
         const orderstatus = order.status;
         if (orderstatus === "delivered") {
             await Order.findByIdAndDelete(id);
-            res.send({ success: true, messege: "order deleted successfully" })
+            return res.status(200).json({ success: true, messege: "Order deleted successfully" })
         }
+        res.status(400).json({ success: false, messege: "Order cannot be deleted - not yet delivered" })
     } catch (error) {
-        console.log(error)
-        res.send({ success: false, messege: "something going wrong" })
+        console.log(error);
+        res.status(500).json({ success: false, messege: "Something went wrong", error: error.message })
     }
 }
 

@@ -20,16 +20,19 @@ const admin = (req, res) => {
 export const orderstatusupdate = async (req, res) => {
     try {
         const { status, id } = req.body;
+        if (!id || !status) {
+            return res.status(400).json({ success: false, messege: "Order ID and status are required" });
+        }
         const order = await Order.findById(id);
         if (!order) {
-            res.json({ success: false, messege: "Order not found" });
+            return res.status(404).json({ success: false, messege: "Order not found" });
         }
         order.status = status;
         await order.save();
-        res.json({ success: true, messege: "Order status updated successfully" });
+        res.status(200).json({ success: true, messege: "Order status updated successfully", order });
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, messege: "Something went wrong", error });
+        console.log("Error in orderstatusupdate:", error);
+        res.status(500).json({ success: false, messege: "Something went wrong", error: error.message });
     }
 }
 
